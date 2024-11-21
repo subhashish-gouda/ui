@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universities and Courses</title>
+    <link rel="stylesheet" type="text/css" href="ug.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #edf6f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .bullet {
+            width: 80%;
+            max-width: 800px;
+            background-color: #006d77;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        .dropdown-bullet {
+            margin: 20px 0;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: #94d2bd;
+        }
+        .university, .course {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #fff;
+        }
+        .university {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <header>
+        <div class="nav" id="nav">
+            <div id="learned-logo">
+                <a href="../index.html"><img src="images/icon/Nist.berhampur.logo.jpg" style="width: 120px;"></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="bullet">
+        <h1>Universities and Courses</h1>
+        <div class="dropdown-bullet">
+            <select id="country-dropdown" onchange="onCountryChange()">
+                <option value="">Select a country...</option>
+            </select>
+        </div>
+        <div id="content"></div>
+    </div>
+
+    <script>
+        const data = [
+            { country: "BOLIVIA", universities: [
+                { name: "Instituto de Estudios Avanzados en Desarrollo (IEAD)", courses: ["Coca Cultivation and Cultural Significance"] },
+                { name: "Universidad Amazónica de Pando", courses: ["Ecological Conservation in the Amazon"] }
+            ]},
+            { country: "PARAGUAYAN", universities: [
+                { name: "Instituto Superior de Música (ISM)", courses: ["Traditional Paraguayan Music Performance"] },
+                { name: "Universidad del Norte (UNINORTE)", courses: ["Paraguayan Literature and Creative Writing"] }
+            ]},
+            { country: "COSTA RICA", universities: [
+                { name: "Universidad de Ciencias Médicas (UCIMED)", courses: ["Tropical Medicine"] },
+                { name: "Escuela de Diseño de la Universidad Veritas", courses: ["Sustainable Fashion Design"] }
+            ]},
+            { country: "PANAMANIAN",universities: [
+                    {name: "Universidad Interamericana de Panamá",courses: ["Bilingual Education and Multiculturalism"]},
+                    {name: "Escuela de Negocios de la Universidad de Panamá",courses: ["Logistics and Supply Chain Management"] }
+            ]},
+            { country: "GUATEMALA",universities: [
+                    {name: "Universidad de San Carlos de Guatemala (USAC)",courses: ["Mayan Studies and Indigenous Cultures"]}
+            ]},           
+            { country: "HONDURAS",universities: [
+                    {name: "Instituto de Formación Profesional (INFOP)",courses: ["Culinary Arts and Traditional Honduran Cuisine"]},
+                    {name: "Universidad de Ciencias de la Salud (UCS)", courses: ["Tropical Medicine"]}
+            ]},
+            { country: "EL SALVADOR",universities: [
+                    {name: "Universidad Centroamericana José Simeón Cañas (UCA)",courses: ["Peace Studies and Conflict Resolution"]},
+                    {name: "Instituto de Formación Profesional (INSAFORP)",courses: ["Culinary Arts focusing on Traditional Salvadoran Cuisine"]}
+            ]},
+            { country: "NICARAGUA",universities: [
+                    {name: "Instituto Nicaragüense de Cultura Hispánica (INCH)",courses: ["Hispanic Literature and Cultural Studies"]}
+            ]},
+            { country: "CUBA",universities: [
+                    {name: "Escuela Internacional de Cine y Televisión (EICTV)",courses: ["Film and Television Production"]},
+                    {name: "Instituto Superior de Arte (ISA)",courses: ["Contemporary Dance and Choreography"]}
+            ]},
+            { country: "DOMINICAN REPUBLIC",universities: [
+                    {name: "Universidad Central del Este (UCE)",courses: ["Agroecology and Sustainable Agriculture"]},
+                    {name: "Universidad Apec (UNAPEC)",courses: ["International Business with a focus on Caribbean Trade"]}
+            ]},
+            { country: "DOMINICAN REPUBLIC",universities: [
+                    {name: "Universidad Central del Este (UCE)",courses: ["Agroecology and Sustainable Agriculture"]},
+                    {name: "Universidad Apec (UNAPEC)",courses: ["International Business with a focus on Caribbean Trade"]}
+            ]}
+        ];
+
+        function populateCountryDropdown() {
+            const dropdown = document.getElementById("country-dropdown");
+            const sortedData = data.sort((a, b) => a.country.localeCompare(b.country));
+
+            sortedData.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.country;
+                option.textContent = item.country;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function onCountryChange() {
+            const selectedCountry = document.getElementById("country-dropdown").value;
+            const contentDiv = document.getElementById("content");
+            contentDiv.innerHTML = ""; 
+
+            if (!selectedCountry) {
+                contentDiv.innerHTML = "<p>Please select a country to view universities.</p>";
+                return;
+            }
+
+            const countryData = data.find(item => item.country === selectedCountry);
+            if (countryData) {
+                renderUniversities(countryData.universities);
+            }
+        }
+
+        function renderUniversities(universities) {
+            const contentDiv = document.getElementById("content");
+            universities.forEach(university => {
+                const universityDiv = document.createElement("div");
+                universityDiv.classList.add("university");
+                universityDiv.textContent = university.name;
+                universityDiv.onclick = () => renderCourses(university.courses);
+                contentDiv.appendChild(universityDiv);
+            });
+        }
+
+        function renderCourses(courses) {
+            const contentDiv = document.getElementById("content");
+            contentDiv.innerHTML = ""; 
+            courses.forEach(course => {
+                const courseDiv = document.createElement("div");
+                courseDiv.classList.add("course");
+                courseDiv.textContent = course;
+                courseDiv.onclick = () => redirectToCourseDetails(course);
+                contentDiv.appendChild(courseDiv);
+            });
+        }
+
+        function redirectToCourseDetails(courseName) {
+            window.location.href = `course-details.html?course=${encodeURIComponent(courseName)}`;
+        }
+
+        populateCountryDropdown();
+    </script>
+
+</body>
+</html>
